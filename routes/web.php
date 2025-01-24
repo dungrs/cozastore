@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Backend\AuthController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Backend\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('backend.index');
+// Route::group(['middleware' => ['admin']], function() {
+    Route::get('/dashboard/index', [DashboardController::class, 'index'])->name('dashboard.index');
+// });
+
+Route::get('/', function() {
+    return view('index');
 });
+
+Route::get('admin', [AuthController::class, 'index'])->name('auth.admin');
+Route::get('login', [AuthController::class, 'login'])->name('auth.login');

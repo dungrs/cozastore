@@ -16,6 +16,16 @@
 
 <!-- Icons Css -->
 <link href="{{ asset('backend/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
 <!-- App Css-->
 <link href="{{ asset('backend/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+
+<!-- Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+@if (isset($config['css']) && is_array($config['css']))
+    @foreach ($config['css'] as $item)
+        <link rel="stylesheet" href="{{ asset($val) }}">
+    @endforeach
+@endif
