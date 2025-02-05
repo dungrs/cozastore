@@ -1,0 +1,45 @@
+<?php 
+return [
+    'user' => [
+        'email' => [
+            'required' => 'Vui lòng nhập email.',
+            'email' => 'Định dạng email không hợp lệ. Ví dụ: abc@gmail.com.',
+            'unique' => 'Email này đã được sử dụng. Vui lòng chọn email khác.',
+            'string' => 'Email phải là chuỗi ký tự hợp lệ.',
+            'max' => 'Email không được vượt quá 250 ký tự.',
+        ],
+        'name' => [
+            'required' => 'Vui lòng nhập họ và tên.',
+            'string' => 'Họ và tên phải là chuỗi ký tự hợp lệ.',
+        ],
+        'user_catalogue_id' => [
+            'required' => 'Vui lòng chọn nhóm thành viên.',
+            'integer' => 'Nhóm thành viên không hợp lệ.',
+            'gt' => 'Vui lòng chọn nhóm thành viên hợp lệ.',
+        ],
+        'birthday' => [
+            'required' => 'Vui lòng nhập ngày sinh.',
+            'date_format' => 'Ngày sinh không đúng định dạng. Vui lòng nhập theo định dạng dd/mm/yyyy.',
+        ],
+    ],
+    'user_catalogue' => [
+        'name' => [
+            'required' => 'Tên nhóm thành viên không được để trống.',
+            'string' => 'Tên nhóm thành viên phải là chuỗi.',
+            'max' => 'Tên nhóm thành viên không được vượt quá 255 ký tự.',
+        ],
+        'email' => [
+            'required' => 'Email không được để trống.',
+            'email' => 'Email nhập không đúng định dạng.',
+        ],
+        'phone' => [
+            'required' => 'Số điện thoại không được để trống.',
+            'string' => 'Số điện thoại phải là chuỗi.',
+            'max' => 'Số điện thoại không được vượt quá 20 ký tự.',
+        ],
+        'description' => [
+            'string' => 'Mô tả phải là chuỗi.',
+            'max' => 'Mô tả không được vượt quá 500 ký tự.',
+        ],
+    ],
+];

@@ -4,16 +4,15 @@
         @include('backend.component.head')
     </head>
 
-    <body data-topbar="dark" data-layout-mode="dark" data-sidebar="dark">
+    <body data-topbar="dark" data-layout-mode="light" data-sidebar="light">
         <!-- Begin page -->
         <div id="layout-wrapper">
             @include('backend.component.nav')
             @include('backend.component.lsidebar')
-        
             @include($template)
         </div>
+        
         <!-- END layout-wrapper -->
-
         @include('backend.component.rsidebar')
 
         <!-- Right bar overlay-->
@@ -21,7 +20,5 @@
 
         <!-- JAVASCRIPT -->
         @include('backend.component.script')
-
     </body>
-
 </html>

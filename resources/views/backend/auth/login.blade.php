@@ -9,7 +9,20 @@
             <div class="bg-overlay bg-light"></div>
             <div class="container">
                 <div class="d-flex flex-column min-vh-100 py-5 px-3">
-                   
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-xl-5">
+                            <div class="text-center text-muted mb-2">
+                                <div class="pb-3">
+                                    <a href="index.html">
+                                        <span class="logo-lg">
+                                            <img src="{{ asset('backend/images/logo-sm.svg') }}" alt="" height="24">
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row justify-content-center my-auto">
                         <div class="col-md-8 col-lg-6 col-xl-5">
@@ -17,14 +30,14 @@
                                 <div class="card-body">
                                     <div class="py-3">
                                         <div class="text-center">
-                                            <h5 class="mb-0">Welcome Back !</h5>
-                                            <p class="text-muted mt-2">Sign in to continue</p>
+                                            <h5 class="mb-0">Chào mùng trở lại !</h5>
+                                            <p class="text-muted mt-2">Đăng nhập để tiếp tục</p>
                                         </div>
                                         <form class="mt-4 pt-2" mehtod="post" action="{{ route('auth.login') }}">
                                             @csrf
                                             <div class="form-floating form-floating-custom">
-                                                <input name="email" type="text" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="input-username" placeholder="Enter User Name">
-                                                <label value="{{ old('email') }}" for="input-username">Username</label>
+                                                <input value="{{ old('email') }}" name="email" type="text" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="input-username" placeholder="Enter User Name">
+                                                <label  for="input-username">Tên dăng nhập</label>
                                                 <div class="form-floating-icon">
                                                     <i class="uil uil-users-alt"></i>
                                                 </div>
@@ -32,13 +45,12 @@
                                             <div class="invalid-feedback mb-3" style="display: block;">
                                                 {{ $errors->has('email') ? $errors->first('email') : '' }}
                                             </div>
-
-                                            <div class="form-floating form-floating-custom auth-pass-inputgroup">
-                                                <input value="{{ old('password') }}" name="password" type="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" id="password-input" placeholder="Enter Password">
-                                                <button type="button" class="btn btn-link position-absolute h-100 end-0 top-0" id="password-addon">
+                                            <div class="form-floating form-floating-custom auth-pass-inputgroup password-form">
+                                                <input value="{{ old('password') }}" name="password" type="password" class="form-control password-input {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="Enter Password">
+                                                <button type="button" class="btn btn-link position-absolute h-100 end-0 top-0 password-addon">
                                                     <i class="mdi mdi-eye-outline font-size-18 text-muted"></i>
                                                 </button>
-                                                <label for="password-input">Password</label>
+                                                <label for="password-input">Mật khẩu</label>
                                                 <div class="form-floating-icon">
                                                     <i class="uil uil-padlock"></i>
                                                 </div>
@@ -50,20 +62,20 @@
                                             <div class="form-check form-check-primary font-size-16 py-1">
                                                 <input class="form-check-input" type="checkbox" id="remember-check">
                                                 <div class="float-end">
-                                                    <a href="auth-resetpassword-basic.html" class="text-muted text-decoration-underline font-size-14">Forgot your password?</a>
+                                                    <a href="auth-resetpassword-basic.html" class="text-muted text-decoration-underline font-size-14">Quên mật khẩu?</a>
                                                 </div>
                                                 <label class="form-check-label font-size-14" for="remember-check">
-                                                    Remember me
+                                                    Ghi nhớ đăng nhập
                                                 </label>
                                             </div>
         
                                             <div class="mt-3">
-                                                <button class="btn btn-primary w-100" type="submit">Log In</button>
+                                                <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
                                             </div>
     
                                             <div class="mt-4 text-center">
                                                 <div class="signin-other-title">
-                                                    <h5 class="font-size-15 mb-4 text-muted fw-medium">- Or you can join with -</h5>
+                                                    <h5 class="font-size-15 mb-4 text-muted fw-medium">- Hoặc bạn có thể tham gia bằng -</h5>
                                                 </div>
     
                                                 <div class="d-flex gap-2">
@@ -80,7 +92,7 @@
                                             </div>
     
                                             <div class="mt-4 pt-3 text-center">
-                                                <p class="text-muted mb-0">Don't have an account ? <a href="auth-signup-basic.html" class="fw-semibold text-decoration-underline"> Signup Now </a> </p>
+                                                <p class="text-muted mb-0">Bạn chưa có tài khoản? <a href="auth-signup-basic.html" class="fw-semibold text-decoration-underline">  Đăng kí ngay</a> </p>
                                             </div>
         
                                         </form><!-- end form -->

@@ -14,12 +14,13 @@ class AuthController extends Controller
     }
 
     public function index() {
-        $config = $this->config();
+        $configs = $this->config();
         if (Auth::id() > 0) {
-            return redirect()->view('dashboard.index');
+            return redirect()->route('dashboard.index');
         }
+
         return view('backend.auth.login', compact(
-            'config'
+            'configs'
         ));
     }
 
@@ -31,19 +32,22 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             return redirect()->route('dashboard.index')->with('success', 'Đăng nhập thành công!');
+        } else {
+            return redirect()->route('auth.admin')->with('error', "Email hoặc Mật khẩu không chính xác");
         }
-
-        return redirect()->route('auth.admin')->with('error', "Email hoặc Mật khẩu không chính xác");
     }
 
-    public function logout() {
-
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('auth.admin');
     }
 
     public function config() {
         return [
             'js' => [
-                'backend/js/pages/form-validation.js'
+                'backend/js/password_visiable.js'
             ]
         ];
     }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\UserCatalogue;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +17,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // Tạo một người dùng với thông tin cụ thể
+        UserCatalogue::create([
+            'name' => 'HR Development',
+        ]);
+
+
         User::create([
             'name' => 'Dương Hồng Nhung',
             'email' => 'dungnhung1209@gmail.com',

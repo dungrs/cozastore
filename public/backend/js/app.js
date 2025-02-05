@@ -112,36 +112,6 @@
             });
         }
     
-        setTimeout(function() {
-            var e = document.querySelectorAll("#sidebar-menu a");
-            e && e.forEach(function(e) {
-                var t, n, a, o, s, l = window.location.href.split(/[?#]/)[0];
-                if (e.href == l) {
-                    e.classList.add("active");
-                    (t = e.parentElement) && "side-menu" !== t.id && (t.classList.add("mm-active"),
-                    (n = t.parentElement) && "side-menu" !== n.id && (n.classList.add("mm-show"),
-                    n.classList.contains("mm-collapsing") && console.log("has mm-collapsing"),
-                    (a = n.parentElement) && "side-menu" !== a.id && (a.classList.add("mm-active"),
-                    (o = a.parentElement) && "side-menu" !== o.id && (o.classList.add("mm-show"),
-                    (s = o.parentElement) && "side-menu" !== s.id && s.classList.add("mm-active")))));
-                }
-            });
-        }, 0);
-    
-        (e = document.querySelectorAll(".navbar-nav a")) && e.forEach(function(e) {
-            var t, n, a, o, s, l, i = window.location.href.split(/[?#]/)[0];
-            if (e.href == i) {
-                e.classList.add("active");
-                (t = e.parentElement) && (t.classList.add("active"),
-                (n = t.parentElement).classList.add("active"),
-                (a = n.parentElement) && (a.classList.add("active"),
-                (o = a.parentElement).closest("li") && o.closest("li").classList.add("active"),
-                o && (o.classList.add("active"),
-                (s = o.parentElement) && (s.classList.add("active"),
-                (l = s.parentElement) && l.classList.add("active")))));
-            }
-        });
-    
         (t = document.querySelector('[data-toggle="fullscreen"]')) && t.addEventListener("click", function(e) {
             e.preventDefault();
             document.body.classList.toggle("fullscreen-enable");
