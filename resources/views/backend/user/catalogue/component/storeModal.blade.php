@@ -2,39 +2,49 @@
     $configModal = $configs['seo']['modal']
 @endphp
 <div class="card-body">
-    <div class="modal fade bs-example-modal-center modal store-modal" tabindex="-1" role="dialog"
-        aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal fade bs-example-modal-center modal store-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form action="" class="needs-validation" id="form-store-modal">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ $configModal['add_member'] }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
+                    @include('backend.component.modalHeader')
                     <div class="modal-body">
+                        @include('backend.component.requiredFields')
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label for="name">{{ $configModal['name'] }} <span class="text-danger">(*)</span></label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="{{ $configModal['name_placeholder'] }}">
+                                <label for="name">
+                                    {{ $configModal['name'] }} <i class="uil uil-exclamation-circle text-danger"></i>
+                                </label>
+                                <input type="text" class="form-control name" name="name" placeholder="{{ $configModal['name_placeholder'] }}">
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label for="phone">{{ $configModal['phone'] }} <span class="text-danger">(*)</span></label>
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="{{ $configModal['phone_placeholder'] }}">
+                                <label for="phone">
+                                    {{ $configModal['phone'] }} <i class="uil uil-exclamation-circle text-danger"></i>
+                                </label>
+                                <input type="text" class="form-control phone" name="phone" placeholder="{{ $configModal['phone_placeholder'] }}">
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label for="email">{{ $configModal['email'] }} <span class="text-danger">(*)</span></label>
-                                <input type="text" class="form-control" id="email" name="email" placeholder="{{ $configModal['email_placeholder'] }} ">
+                                <label for="email">
+                                    {{ $configModal['email'] }} <i class="uil uil-exclamation-circle text-danger"></i>
+                                </label>
+                                <input type="text" class="form-control email" name="email" placeholder="{{ $configModal['email_placeholder'] }}">
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label for="description">{{ $configModal['description'] }} </label>
-                                <input type="text" class="form-control" id="description" name="description" placeholder="{{ $configModal['description_placeholder'] }} ">
+                                <label for="description">{{ $configModal['description'] }}</label>
+                                <input type="text" class="form-control description" name="description" placeholder="{{ $configModal['description_placeholder'] }}">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="">{{ $configModal['language'] }}</label>
+                                @if ($availableLanguages)
+                                    <select class="form-control rounded choice-single" name="language_id">
+                                        @foreach ($availableLanguages as $language)
+                                            <option value="{{ $language->id }}">{{ $language->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @endif
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.modal.close') }}</button>
-                        <button type="submit" class="btn btn-primary" id="submitButton">{{ __('messages.modal.confirm') }}</button>
-                    </div>
+                    @include('backend.component.modalFooter')
                 </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

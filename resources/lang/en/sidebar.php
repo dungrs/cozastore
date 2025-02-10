@@ -3,20 +3,20 @@
 return [
     'module' => [
         [
-            'menu_title' => 'Menu'
+            'menu_title' => 'Categories'
         ],
         [
             'title' => 'Dashboard',
             'icon' => 'bx bx-home-circle',
-            'name' => 'dashboard',
+            'name' => ['dashboard'],
         ],
         [
-            'menu_title' => 'Application'
+            'menu_title' => 'Applications'
         ],
         [
             'title' => 'Member Group Management',
             'icon' => 'bx bxs-user',
-            'name' => 'user',
+            'name' => ['user'],
             'subModule' => [
                 [
                     'title' => 'Member Group Management',
@@ -28,18 +28,29 @@ return [
                 ]
             ]
         ],
+        [
+            'title' => 'General Configuration',
+            'icon' => 'bx bxs-cog',
+            'name' => ['language'],
+            'subModule' => [
+                [
+                    'title' => 'Language Management',
+                    'route' => 'language.index'
+                ],
+            ]
+        ],
         // [
         //     'title' => 'Product Management',
         //     'icon' => 'bx bx-cube',
-        //     'name' => 'user',
+        //     'name' => 'product',
         //     'subModule' => [
         //         [
-        //             'title' => 'Product Category Management',
-        //             'route' => 'user.index'
+        //             'title' => 'Product Group Management',
+        //             'route' => 'product.catalogue.index'
         //         ],
         //         [
         //             'title' => 'Product Management',
-        //             'route' => 'user.catalogue.index'
+        //             'route' => 'product.index'
         //         ]
         //     ]
         // ]

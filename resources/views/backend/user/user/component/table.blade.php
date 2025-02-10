@@ -1,6 +1,6 @@
 <div class="table-responsive">
-    <table class="table align-middle table-nowrap">
-        <thead>
+    <table class="table align-middle">
+        <thead class="table-light">
             <tr>
                 <th>
                     <div class="form-check font-size-16">
@@ -12,8 +12,8 @@
                 <th>{{ $seoTableHeaders['contact'] }}</th>
                 <th>{{ $seoTableHeaders['address'] }}</th>
                 <th>{{ $seoTableHeaders['group'] }}</th>
-                <th>{{ $seoTableHeaders['status'] }}</th>
-                <th>{{ $seoTableHeaders['actions'] }}</th>
+                <th>{{ __('messages.status') }}</th>
+                <th>{{ __('messages.actions.title') }}</th>
             </tr>
         </thead>
         <tbody class="data-table">

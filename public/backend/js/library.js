@@ -2,6 +2,7 @@ var HT = {
     _token: $('meta[name="csrf-token"]').attr('content'),
     filterTimeout: null,
     currentPage: 1,
+    app_url: 'http://127.0.0.1:8000',
 
     initializeChoices: function () {
         $(".choice-single").each(function () {
@@ -34,15 +35,15 @@ var HT = {
 
     displayValidationErrors: function (errors) {
         $.each(errors, function (field, messages) {
-            let inputField = $(`#${field}`);
+            let inputField = $(`.${field}`);
+            
             inputField.addClass('is-invalid');
             inputField.after(`<div class="invalid-feedback">${messages[0]}</div>`);
-
-            inputField.on(inputField.find('select') ? 'change' : 'keyup', function () {
+    
+            inputField.off('input change').on('input change', function () {
                 inputField.removeClass('is-invalid');
                 inputField.next('.invalid-feedback').remove();
             });
-
         });
     },
 
@@ -96,11 +97,133 @@ var HT = {
         });
     },
 
+    openChangeStatus: function() {
+        $('.publish-check').on('change', function () {
+            let _this = $(this);
+
+            let id = _this.data('id'),
+                status = _this.is(':checked') ? 2 : 1,
+                field = _this.data('field');
+
+            let formData = {
+                _token: HT._token,
+                field: field,
+                status: status,
+                model: Config.model,
+                modelParent: Config.modelParent
+            };
+
+            $.ajax({
+                url: `/ajax/dashboard/changeStatus/${id}`,
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        // alertify.success(response.message);
+                    } else {
+                        // alertify.error(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    alertify.error("Đã xảy ra lỗi khi cập nhật trạng thái.");
+                },
+            });
+        });
+    },
+
+    handleDeleteRequest: function(selector, deleteUrl, instance) {
+        $(document).on("click", selector, function (e) {
+            e.preventDefault();
+            let id = $(this).data('id'),
+                messages = Config.confirmMessages;
+            
+            Swal.fire({
+                title: messages.title,
+                text: messages.text,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#51d28c",
+                cancelButtonColor: "#f34e4e",
+                confirmButtonText: messages.confirmButton,
+                cancelButtonText: messages.cancelButton
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `${deleteUrl}/${id}`,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.status === 'success') {
+                                Swal.fire(messages.successTitle, response.message, "success");
+                            } else {
+                                Swal.fire(messages.errorTitle, response.message, "error");
+                            }
+                            instance.sendDataFilter(HT.currentPage);
+                        },
+                        error: function (xhr) {
+                            Swal.fire(messages.errorTitle, xhr.responseJSON?.message || messages.deleteError, "error");
+                        },
+                    });
+                }
+            });
+        });
+    },
+
     openCheckStatusAll: function () {
         $('.checkStatusAll').on('change', function () {
             let isChecked = $(this).prop('checked');
             $('.publish-checkAll').prop('checked', isChecked);
         });
+    },
+
+    renderPagination: function(response) {
+        const pagination = $('.pagination');
+        pagination.empty();
+
+        pagination.append(`
+            <li class="page-item ${response.data.current_page === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="javascript:void(0)" data-page="${response.data.current_page - 1}" aria-label="Previous">
+                    <i class="mdi mdi-chevron-left"></i>
+                </a>
+            </li>
+        `);
+
+        response.data.links.forEach(link => {
+            if (link.label !== 'pagination.previous' && link.label !== 'pagination.next') {
+                if (link.url) {
+                    pagination.append(`
+                        <li class="page-item ${link.active ? 'active' : ''}">
+                            <a class="page-link" href="javascript:void(0)" data-page="${link.label}">${link.label}</a>
+                        </li>
+                    `);
+                } else {
+                    pagination.append(`
+                        <li class="page-item disabled">
+                            <span class="page-link">${link.label}</span>
+                        </li>
+                    `);
+                }
+            }
+        });
+
+        pagination.append(`
+            <li class="page-item ${response.data.current_page === response.data.last_page ? 'disabled' : ''}">
+                <a class="page-link" href="javascript:void(0)" data-page="${response.data.current_page + 1}" aria-label="Next">
+                    <i class="mdi mdi-chevron-right"></i>
+                </a>
+            </li>
+        `);
+    },
+
+    setValueSwitchChoices: function(selectElement, value) {
+        selectElement.val(value);
+        let instance = selectElement.data("choicesInstance");
+        if (instance) {
+            instance.setChoiceByValue(value.toString());
+        }
+
+        return instance;
     },
 
     enableFormValidation: function() {

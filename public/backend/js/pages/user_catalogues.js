@@ -1,13 +1,5 @@
 const UserCatalogue = {
-    storeAndUpdateData: function (url) {
-        let formData = {
-            _token: HT._token,
-            name: $('#name').val().trim(),
-            phone: $('#phone').val().trim(),
-            email: $('#email').val().trim(),
-            description: $('#description').val().trim(),
-        };
-
+    submitFormData: function (url, formId, formData) {
         $.ajax({
             url: url,
             type: 'POST',
@@ -16,8 +8,9 @@ const UserCatalogue = {
             success: function (response) {
                 if (response.status === 'success') {
                     alertify.success(response.message);
-                    $('.store-modal').modal('hide');
-                    $('#form-store-modal')[0].reset();
+                    let modal = $('#' + formId).closest('.modal');
+                    modal.modal('hide');
+                    $('#' + formId)[0].reset();
                     UserCatalogue.sendDataFilter(HT.currentPage);
                 } else {
                     alertify.error(response.message);
@@ -36,21 +29,146 @@ const UserCatalogue = {
     openAddModal: function () {
         $('.add-button').on('click', function (e) {
             e.preventDefault();
+
+            $('.modal-title').text(Config.modalTitle.create)
             $('#form-store-modal').attr('data-id', '');
             $('#form-store-modal')[0].reset();
+
+            languageSelect = $('select[name="language_id"]');
+            let selectedLanguage = $('.dropdown-menu .language-filter.active').data('id');
+            instance = HT.setValueSwitchChoices(languageSelect, selectedLanguage);
+            instance.enable();
+
             HT.clearValidationErrors();
             $('.store-modal').modal('show');
         });
     },
 
-    bindStoreAndUpdateEntityHandler: function () {
-        $(document).on('click', '#submitButton', function (e) {
+    openEditModal: function (selectedLanguage) {
+        $('.edit-button-modal').on('click', function (e) {
             e.preventDefault();
+
+            $('.modal-title').text(Config.modalTitle.edit)
+            let id = $(this).data('id');
             HT.clearValidationErrors();
 
-            let id = $('#form-store-modal').attr('data-id');
-            let url = id ? `/ajax/user/catalogue/update/${id}` : '/ajax/user/catalogue/create';
-            UserCatalogue.storeAndUpdateData(url);
+            $.ajax({
+                url: `/ajax/user/catalogue/edit/${id}/${selectedLanguage}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    let item = response.data;
+
+                    $('.name').val(item.name);
+                    $('.phone').val(item.phone);
+                    $('.email').val(item.email);
+                    $('.description').val(item.description);
+                    $('#form-store-modal').attr('data-id', id);
+                    $('#form-store-modal').attr('data-languageId', selectedLanguage);
+
+                    languageSelect = $('select[name="language_id"]');
+                    let instance = HT.setValueSwitchChoices(languageSelect, item.language_id);
+                    instance.disable();
+
+                    $('.store-modal').modal('show');
+                },
+                error: function (xhr) {
+                    console.error('Error fetching detail: ', xhr.responseText);
+                }
+            });
+        });
+    },
+
+    openTranslateModal: function (selectedLanguage) {
+        $('.translate-btn').on('click', function (e) {
+            e.preventDefault();
+
+            $('.modal-title').text(Config.modalTitle.translate);
+            let id = $(this).data('id');
+
+            $.ajax({
+                url: `/ajax/user/catalogue/details/${id}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    let data = response.data;
+
+                    let original = data.find(item => item.language_id == selectedLanguage)
+                    if (original) {
+                        $('#name_original').val(original.name);
+                        $('#description_original').val(original.description);
+                    }
+
+                    HT.clearValidationErrors();
+
+                    $('#language-tabs .nav-link').each(function () {
+                        let tab = $(this);
+                        let canonical = tab.data('canonical');
+                        let icon = tab.find('i');
+            
+                        let hasTranslation = data.some(item => item.canonical === canonical && item.name);
+            
+                        if (hasTranslation) {
+                            icon.removeClass('uil-exclamation-circle text-danger')
+                                .addClass('uil-check-circle text-success');
+                        } else {
+                            icon.removeClass('uil-check-circle text-success')
+                                .addClass('uil-exclamation-circle text-danger');
+                        }
+                    });
+
+                    data.forEach(item => {
+                        let tab = $('#language-tabs-content').find('#' + item.canonical);
+                        if (tab.length) {
+                            tab.find('.name_trans').val(item.name);
+                            tab.find('.description_trans').val(item.description);
+                        }
+                    });
+
+                    $('#form-translate-modal').attr('data-id', id);
+    
+                    $('.translate-modal').modal('show');
+                },
+                error: function (xhr) {
+                    console.error('Error fetching detail: ', xhr.responseText);
+                }
+            });
+
+        });
+    },
+
+    bindSubmitEntityHandler: function () {
+        $(document).on('click', '.submitButton', function (e) {
+            e.preventDefault();
+            HT.clearValidationErrors();
+    
+            let modal = $(this).closest('.modal');
+            let form = modal.find('form');
+            let formId = form.attr('id');
+            let id = form.attr('data-id'); 
+            let url, formData;
+    
+            if (modal.hasClass('store-modal')) {
+                let language_id = form.attr('data-languageId');
+                formData = form.serialize() + '&_token=' + encodeURIComponent(HT._token);
+                url = id ? `/ajax/user/catalogue/update/${id}/${language_id}` : '/ajax/user/catalogue/create/';
+            } else if (modal.hasClass('translate-modal')) {
+                let activeTab = $('#language-tabs-content .tab-pane.active');
+                let language_id = activeTab.find('input[name="language_id"]').val();
+                let name = activeTab.find('input[name="name_trans"]').val();
+                let description = activeTab.find('input[name="description_trans"]').val();
+    
+                formData = {
+                    name_trans: name,
+                    description_trans: description,
+                    language_id: language_id,
+                    _token: HT._token,
+                };
+    
+                url = `/ajax/user/catalogue/translate/${id}`;
+            }
+    
+            UserCatalogue.submitFormData(url, formId, formData);
         });
     },
 
@@ -63,6 +181,11 @@ const UserCatalogue = {
                 dataFilterSend[name] = $(this).val();
             }
         });
+
+        let selectedLanguage = $('.dropdown-menu .language-filter.active').data('id');
+        if (selectedLanguage) {
+            dataFilterSend.language_id = selectedLanguage;
+        }
 
         $.ajax({
             url: '/ajax/user/catalogue/filter',
@@ -99,10 +222,19 @@ const UserCatalogue = {
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
                                             <a href="#" data-id="${item.id}" class="dropdown-item edit-button-modal">
-                                                <i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Chỉnh sửa
+                                                <i class="mdi mdi-pencil font-size-16 text-success me-1"></i> ${Config.actionTextButton.edit}
                                             </a>
                                         </li>
-                                        <li><a href="#" data-id="${item.id}" class="dropdown-item sa-warning"><i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> Xóa</a></li>
+                                        <li>
+                                            <a href="#" data-id="${item.id}" class="dropdown-item translate-btn">
+                                                <i class="mdi mdi-translate font-size-16 text-primary me-1"></i> ${Config.actionTextButton.translate}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" data-id="${item.id}" class="dropdown-item delete-btn">
+                                                <i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> ${Config.actionTextButton.delete}
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </td>
@@ -110,135 +242,11 @@ const UserCatalogue = {
                     `);
                 });
 
-                $('.publish-check').on('change', function () {
-                    let _this = $(this);
-
-                    let id = _this.data('id'),
-                        status = _this.is(':checked') ? 2 : 1,
-                        field = _this.data('field');
-
-                    let formData = {
-                        _token: HT._token,
-                        field: field,
-                        status: status,
-                        model: Config.model,
-                        modelParent: Config.modelParent
-                    };
-
-                    $.ajax({
-                        url: `/ajax/dashboard/changeStatus/${id}`,
-                        type: 'POST',
-                        data: formData,
-                        dataType: 'json',
-                        success: function (response) {
-                            if (response.status === 'success') {
-                                // alertify.success(response.message);
-                            } else {
-                                // alertify.error(response.message);
-                            }
-                        },
-                        error: function (xhr) {
-                            alertify.error("Đã xảy ra lỗi khi cập nhật trạng thái.");
-                        },
-                    });
-                });
-
-                $('.edit-button-modal').on('click', function (e) {
-                    e.preventDefault();
-                    let id = $(this).data('id');
-                    HT.clearValidationErrors();
-
-                    $.ajax({
-                        url: `/ajax/user/catalogue/edit/${id}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (response) {
-                            let item = response.data;
-
-                            $('#name').val(item.name);
-                            $('#phone').val(item.phone);
-                            $('#email').val(item.email);
-                            $('#description').val(item.description);
-                            $('#form-store-modal').attr('data-id', id);
-                            $('.store-modal').modal('show');
-                        },
-                        error: function (xhr) {
-                            console.error('Error fetching detail: ', xhr.responseText);
-                        }
-                    });
-                });
-
-                $(".sa-warning").on("click", function (e) {
-                    e.preventDefault();
-                    let id = $(this).data('id'),
-                        messages = Config.confirmMessages;
-                    Swal.fire({
-                        title: messages.title,
-                        text: messages.text,
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#51d28c",
-                        cancelButtonColor: "#f34e4e",
-                        confirmButtonText: messages.confirmButton,
-                        cancelButtonText: messages.cancelButton
-                    }).then(function (result) {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: `/ajax/user/catalogue/delete/${id}`,
-                                type: 'GET',
-                                dataType: 'json',
-                                success: function (response) {
-                                    if (response.status === 'success') {
-                                        Swal.fire(messages.successTitle, response.message, "success");
-                                    } else {
-                                        Swal.fire(messages.errorTitle, response.message, "error");
-                                    }
-                                    User.sendDataFilter(HT.currentPage);
-                                },
-                                error: function (xhr) {
-                                    Swal.fire(messages.errorTitle, xhr.responseJSON.message || response.message, "error");
-                                },
-                            });
-                        }
-                    });
-                });
-
-                const pagination = $('.pagination');
-                pagination.empty();
-
-                pagination.append(`
-                    <li class="page-item ${response.data.current_page === 1 ? 'disabled' : ''}">
-                        <a class="page-link" href="javascript:void(0)" data-page="${response.data.current_page - 1}" aria-label="Previous">
-                            <i class="mdi mdi-chevron-left"></i>
-                        </a>
-                    </li>
-                `);
-
-                response.data.links.forEach(link => {
-                    if (link.label !== 'pagination.previous' && link.label !== 'pagination.next') {
-                        if (link.url) {
-                            pagination.append(`
-                                <li class="page-item ${link.active ? 'active' : ''}">
-                                    <a class="page-link" href="javascript:void(0)" data-page="${link.label}">${link.label}</a>
-                                </li>
-                            `);
-                        } else {
-                            pagination.append(`
-                                <li class="page-item disabled">
-                                    <span class="page-link">${link.label}</span>
-                                </li>
-                            `);
-                        }
-                    }
-                });
-
-                pagination.append(`
-                    <li class="page-item ${response.data.current_page === response.data.last_page ? 'disabled' : ''}">
-                        <a class="page-link" href="javascript:void(0)" data-page="${response.data.current_page + 1}" aria-label="Next">
-                            <i class="mdi mdi-chevron-right"></i>
-                        </a>
-                    </li>
-                `);
+                HT.openChangeStatus();
+                UserCatalogue.openEditModal(selectedLanguage);
+                UserCatalogue.openTranslateModal(selectedLanguage);
+                HT.handleDeleteRequest(".delete-btn", "/ajax/user/catalogue/delete", UserCatalogue)
+                HT.renderPagination(response);
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
@@ -249,7 +257,6 @@ const UserCatalogue = {
             },
         });
     },
-
     
     attachPaginationEvent: function () {
         $(document).on('click', '.pagination .page-link', function (e) {
@@ -271,11 +278,26 @@ const UserCatalogue = {
                 UserCatalogue.sendDataFilter();
             }, 500);
         });
+
+        $(".dropdown-menu .language-filter").on("click", function () {
+            let _this = $(this);
+    
+            $(".dropdown-menu .language-filter").removeClass('active');
+            _this.addClass('active');
+    
+            let language_name = _this.data('name'),
+                language_image = _this.data('image');
+    
+            $('#lang_image_select').attr('src', language_image);
+            $('#lang_name_select').text(language_name);
+            
+            UserCatalogue.sendDataFilter();
+        });
     },
 };
 
 $(document).ready(function () {
-    UserCatalogue.bindStoreAndUpdateEntityHandler();
+    UserCatalogue.bindSubmitEntityHandler();
     UserCatalogue.sendDataFilter();
     UserCatalogue.openAddModal();
     UserCatalogue.attachFilterEvent();

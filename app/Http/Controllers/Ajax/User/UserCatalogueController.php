@@ -39,13 +39,23 @@ class UserCatalogueController extends Controller
         return $response;
     }
 
-    public function edit($id) {
-        $userCatalogue = $this->userCatalogueService->getUserCatalogueDetails($id);
+    public function edit($id, $languageId) {
+        $userCatalogue = $this->userCatalogueService->getUserCatalogueDetails($id, $languageId);
         return $userCatalogue;
     }
 
-    public function update(UpdateUserCatalogueRequest $request, $id) {
-        $response = $this->userCatalogueService->update($request, $id);
+    public function translate(StoreUserCatalogueRequest $request, $id) {
+        $userCatalogue = $this->userCatalogueService->saveTranslate($request, $id);
+        return $userCatalogue;
+    }
+
+    public function details($id) {
+        $userCatalogue = $this->userCatalogueService->getDetails($id);
+        return $userCatalogue;
+    }
+
+    public function update(UpdateUserCatalogueRequest $request, $id, $languageId) {
+        $response = $this->userCatalogueService->update($request, $id, $languageId);
         return $response;
     }
 

@@ -1,3 +1,4 @@
+@import "https://fonts.googleapis.com/css2?family=Public+Sans:wght@200;300;400;500;600;700&display=swap";
 :root {
     --bs-sidebar-bg: #ffffff;
     --bs-sidebar-border-color: #e9ebef;
@@ -677,7 +678,7 @@
     margin: 0;
     background-color: transparent;
     font-size: 14px;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
     margin-right: 10px;
   }
   #sidebar-menu ul li ul.sub-menu li a:hover {
@@ -3992,7 +3993,7 @@
     text-align: right;
   }
   .ql-container {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
   }
   .ql-container.ql-snow {
     border-color: var(--bs-input-border);
@@ -4002,7 +4003,7 @@
     border-radius: 0.25rem;
   }
   .ql-toolbar {
-    font-family: "Noto Sans", sans-serif !important;
+    font-family: "Public Sans", sans-serif !important;
   }
   .ql-toolbar span {
     outline: 0 !important;
@@ -4148,14 +4149,14 @@
     min-height: 10px !important;
   }
   .apex-charts text {
-    font-family: "Noto Sans", sans-serif !important;
+    font-family: "Public Sans", sans-serif!important;
   }
   .apex-charts .apexcharts-canvas {
     margin: 0 auto;
   }
   .apexcharts-tooltip-text,
   .apexcharts-tooltip-title {
-    font-family: "Noto Sans", sans-serif !important;
+    font-family: "Public Sans", sans-serif !important;
   }
   .apexcharts-tooltip {
     border: 1px solid var(--bs-border-color) !important;
@@ -4164,7 +4165,7 @@
     box-shadow: 0 2px 3px rgba(52, 58, 64, 0.06) !important;
   }
   .apexcharts-tooltip * {
-    font-family: "Noto Sans", sans-serif !important;
+    font-family: "Public Sans", sans-serif !important;
     color: #959396 !important;
   }
   .apexcharts-tooltip .apexcharts-tooltip-title {
@@ -4183,7 +4184,7 @@
   }
   .apexcharts-legend-text {
     color: #959396 !important;
-    font-family: "Noto Sans", sans-serif !important;
+    font-family: "Public Sans", sans-serif !important;
     font-size: 13px !important;
   }
   .apexcharts-pie-label {
@@ -4195,7 +4196,7 @@
   }
   .apexcharts-xaxis text,
   .apexcharts-yaxis text {
-    font-family: "Noto Sans", sans-serif !important;
+    font-family: "Public Sans", sans-serif !important;
     fill: #adb5bd;
   }
   .apexcharts-yaxis-title {
@@ -4269,13 +4270,13 @@
     fill: var(--bs-body-color);
   }
   .glightbox-clean .gslide-title {
-    font-family: "Nunito Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
     margin-bottom: 5px;
     font-weight: 500;
     font-size: 18px;
   }
   .glightbox-clean .gslide-desc {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
     font-size: 14px;
   }
   .glightbox-clean .gclose {
@@ -4331,7 +4332,7 @@
   .jvm-tooltip {
     border-radius: 3px;
     background-color: #776acf;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
     -webkit-box-shadow: 0 5px 6px rgba(52, 58, 64, 0.1);
     box-shadow: 0 5px 6px rgba(52, 58, 64, 0.1);
     padding: 3px 5px;

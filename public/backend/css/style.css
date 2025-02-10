@@ -1,3 +1,12 @@
 .choices__list--dropdown .choices__item--selectable {
     padding-right: 0px !important;
 }
+
+.img-flag {
+    height: 2.6rem;
+    width: 3.6rem;
+}
+
+.dropdown-item {
+    cursor: pointer;
+}

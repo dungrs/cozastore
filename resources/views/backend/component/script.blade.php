@@ -22,11 +22,17 @@
 <script src="{{ asset('backend/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 
 <script src="{{ asset('backend/js/app.js') }}"></script>
+@php
+    $snakeModel = toSnakeCase($configs['model'] ?? '');
+    $modalTitle = __("messages.$snakeModel.modal.title")
+@endphp
 <script>
     const Config = {
         model: "{{ $configs['model'] ?? '' }}",
         modelParent: "{{ $configs['modelParent'] ?? '' }}",
-        confirmMessages: @json(__('messages.confirmJs')) 
+        confirmMessages: @json(__('messages.confirmJs')),
+        actionTextButton: @json(__('messages.actions')),
+        modalTitle: @json($modalTitle),
     };
 </script>
 

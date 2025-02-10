@@ -22,7 +22,6 @@ const User = {
 
     storeAndUpdateData: function (url) {
         let formData = $('#form-store-modal').serialize();
-    
         formData += '&_token=' + encodeURIComponent(HT._token);
         
         $.ajax({
@@ -55,6 +54,7 @@ const User = {
             console.log(123);
             e.preventDefault();
 
+            $('.modal-title').text(Config.modalTitle.create)
             $('.password-section').remove()
             $('#form-mode').val('store');
             User.togglePasswordForm();
@@ -66,6 +66,71 @@ const User = {
             HT.clearValidationErrors();
 
             $('.store-modal').modal('show');
+        });
+    },
+
+    openEditModal: function () {
+        $('.edit-button-modal').on('click', function (e) {
+            e.preventDefault();
+            
+            $('.modal-title').text(Config.modalTitle.edit)
+            let id = $(this).data('id');
+
+            $('#form-mode').val('edit');
+            User.togglePasswordForm();
+        
+            $.ajax({
+                url: `/ajax/user/edit/${id}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    let item = response.data;
+        
+                    $('.name').val(item.name);
+                    $('.email').val(item.email);
+                    $('.phone').val(item.phone);
+                    $('.description').val(item.description);
+                    $('.address').val(item.address);
+                    $('.birthday').val(HT.formatDate(item.birthday));
+                    $('.image').val(item.image)
+        
+                    let userCatalogueSelect = $('select[name="user_catalogue_id"]'),
+                        provinceSelect = $('select[name="province_id"]'),
+                        districtSelect = $('select[name="district_id"]'),
+                        wardSelect = $('select[name="ward_id"]');
+
+                    HT.setValueSwitchChoices(userCatalogueSelect, item.user_catalogue_id);
+
+                    if (item.province_id) {
+                        HT.setValueSwitchChoices(provinceSelect, item.province_id);
+                        LC.sendDataGetLocation({
+                            data : { location_id : item.province_id },
+                            target: "districts",
+                            callback: function() {
+                                if (item.district_id) {
+                                    HT.setValueSwitchChoices(districtSelect, item.district_id);
+                                    LC.sendDataGetLocation({
+                                        data: { location_id : item.district_id },
+                                        target: "wards",
+                                        callback: function() {
+                                            if (item.ward_id) {
+                                                HT.setValueSwitchChoices(wardSelect, item.ward_id);
+                                            }
+                                        }
+                                    })
+                                    
+                                }
+                            }
+                        })
+                    }
+
+                    $('#form-store-modal').attr('data-id', id);
+                    $('.store-modal').modal('show');
+                },
+                error: function (xhr) {
+                    console.error('Error fetching detail: ', xhr.responseText);
+                }
+            });
         });
     },
 
@@ -86,7 +151,7 @@ const User = {
     },
 
     bindStoreAndUpdateEntityHandler: function () {
-        $(document).on('click', '#submitButton', function (e) {
+        $(document).on('click', '.submitButton', function (e) {
             e.preventDefault();
             HT.clearValidationErrors();
 
@@ -130,8 +195,8 @@ const User = {
                             </td>
                             
                             <td>${item.address ?? '-'}</td>
-                            <td>${item.user_catalogue_name ?? '-'}</td>
-                             <td>
+                            <td>${item.user_catalogue_name ?? '<span class="badge badge-outline-warning">Không có bản dịch</span>'}</td>
+                            <td>
                                 <input type="checkbox" id="switch${item.id}" data-field="publish" data-id="${item.id}" class="publish-check" switch="none" ${item.publish == 2 ? 'checked' : ''}>
                                 <label for="switch${item.id}" data-on-label="On" data-off-label="Off" class="mb-0"></label>
                             </td>
@@ -143,10 +208,14 @@ const User = {
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
                                             <a href="#" data-id="${item.id}" class="dropdown-item edit-button-modal">
-                                                <i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Chỉnh sửa
+                                                <i class="mdi mdi-pencil font-size-16 text-success me-1"></i> ${Config.actionTextButton.edit}
                                             </a>
                                         </li>
-                                        <li><a href="#" data-id="${item.id}" class="dropdown-item sa-warning"><i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> Xóa</a></li>
+                                        <li>
+                                            <a href="#" data-id="${item.id}" class="dropdown-item delete-btn">
+                                                <i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> ${Config.actionTextButton.delete}
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </td>
@@ -154,171 +223,10 @@ const User = {
                     `);
                 });
 
-                $('.publish-check').on('change', function () {
-                    let _this = $(this);
-
-                    let id = _this.data('id'),
-                        status = _this.is(':checked') ? 2 : 1,
-                        field = _this.data('field');
-
-                    let formData = {
-                        _token: HT._token,
-                        field: field,
-                        status: status,
-                        model: Config.model,
-                        modelParent: Config.modelParent
-                    };
-
-                    $.ajax({
-                        url: `/ajax/dashboard/changeStatus/${id}`,
-                        type: 'POST',
-                        data: formData,
-                        dataType: 'json',
-                        success: function (response) {
-                            if (response.status === 'success') {
-
-                            } else {
-
-                            }
-                        },
-                        error: function (xhr) {
-                            // alertify.error("Đã xảy ra lỗi khi cập nhật trạng thái.");
-                        },
-                    });
-                });
-
-                $('.edit-button-modal').on('click', function (e) {
-                    e.preventDefault();
-                    let id = $(this).data('id');
-
-                    $('#form-mode').val('edit');
-                    User.togglePasswordForm();
-                
-                    $.ajax({
-                        url: `/ajax/user/edit/${id}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (response) {
-                            let item = response.data;
-                
-                            $('#name').val(item.name);
-                            $('#email').val(item.email);
-                            $('#phone').val(item.phone);
-                            $('#description').val(item.description);
-                            $('#address').val(item.address);
-                            $('#birthday').val(HT.formatDate(item.birthday));
-                            $('#image').val(item.image)
-                
-                            let userCatalogueSelect = $('select[name="user_catalogue_id"]'),
-                                provinceSelect = $('select[name="province_id"]'),
-                                districtSelect = $('select[name="district_id"]'),
-                                wardSelect = $('select[name="ward_id"]');
-
-                            User.setValueSwitchChoices(userCatalogueSelect, item.user_catalogue_id);
-
-                            if (item.province_id) {
-                                User.setValueSwitchChoices(provinceSelect, item.province_id);
-                                LC.sendDataGetLocation({
-                                    data : { location_id : item.province_id },
-                                    target: "districts",
-                                    callback: function() {
-                                        if (item.district_id) {
-                                            User.setValueSwitchChoices(districtSelect, item.district_id);
-                                            LC.sendDataGetLocation({
-                                                data: { location_id : item.district_id },
-                                                target: "wards",
-                                                callback: function() {
-                                                    if (item.ward_id) {
-                                                        User.setValueSwitchChoices(wardSelect, item.ward_id);
-                                                    }
-                                                }
-                                            })
-                                            
-                                        }
-                                    }
-                                })
-                            }
-
-                            $('#form-store-modal').attr('data-id', id);
-                            $('.store-modal').modal('show');
-                        },
-                        error: function (xhr) {
-                            console.error('Error fetching detail: ', xhr.responseText);
-                        }
-                    });
-                });
-
-                $(".sa-warning").on("click", function (e) {
-                    e.preventDefault();
-                    let id = $(this).data('id'),
-                        messages = Config.confirmMessages;
-                    Swal.fire({
-                        title: messages.title,
-                        text: messages.text,
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#51d28c",
-                        cancelButtonColor: "#f34e4e",
-                        confirmButtonText: messages.confirmButton,
-                        cancelButtonText: messages.cancelButton
-                    }).then(function (result) {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: `/ajax/user/delete/${id}`,
-                                type: 'GET',
-                                dataType: 'json',
-                                success: function (response) {
-                                    if (response.status === 'success') {
-                                        Swal.fire(messages.successTitle, response.message, "success");
-                                    } else {
-                                        Swal.fire(messages.errorTitle, response.message, "error");
-                                    }
-                                    User.sendDataFilter(HT.currentPage);
-                                },
-                                error: function (xhr) {
-                                    Swal.fire(messages.errorTitle, xhr.responseJSON.message || messages.deleteError, "error");
-                                },
-                            });
-                        }
-                    });
-                });
-
-                const pagination = $('.pagination');
-                pagination.empty();
-
-                pagination.append(`
-                    <li class="page-item ${response.data.current_page === 1 ? 'disabled' : ''}">
-                        <a class="page-link" href="javascript:void(0)" data-page="${response.data.current_page - 1}" aria-label="Previous">
-                            <i class="mdi mdi-chevron-left"></i>
-                        </a>
-                    </li>
-                `);
-
-                response.data.links.forEach(link => {
-                    if (link.label !== 'pagination.previous' && link.label !== 'pagination.next') {
-                        if (link.url) {
-                            pagination.append(`
-                                <li class="page-item ${link.active ? 'active' : ''}">
-                                    <a class="page-link" href="javascript:void(0)" data-page="${link.label}">${link.label}</a>
-                                </li>
-                            `);
-                        } else {
-                            pagination.append(`
-                                <li class="page-item disabled">
-                                    <span class="page-link">${link.label}</span>
-                                </li>
-                            `);
-                        }
-                    }
-                });
-
-                pagination.append(`
-                    <li class="page-item ${response.data.current_page === response.data.last_page ? 'disabled' : ''}">
-                        <a class="page-link" href="javascript:void(0)" data-page="${response.data.current_page + 1}" aria-label="Next">
-                            <i class="mdi mdi-chevron-right"></i>
-                        </a>
-                    </li>
-                `);
+                HT.openChangeStatus();
+                User.openEditModal();
+                HT.handleDeleteRequest(".delete-btn", "/ajax/user/delete", User)
+                HT.renderPagination(response);
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
@@ -328,14 +236,6 @@ const User = {
                 }
             },
         });
-    },
-
-    setValueSwitchChoices: function(selectElement, value) {
-        selectElement.val(value);
-        let instance = selectElement.data("choicesInstance");
-        if (instance) {
-            instance.setChoiceByValue(value.toString());
-        }
     },
 
     attachPaginationEvent: function () {
@@ -367,7 +267,7 @@ const User = {
         if(formMode === 'edit') {
             $('.password-section').remove()
         } else {
-            $('#birthday').closest('.col-md-6').after(User.passwordFieldsHTML)
+            $('.birthday').closest('.col-md-6').after(User.passwordFieldsHTML)
         }
     }
 };

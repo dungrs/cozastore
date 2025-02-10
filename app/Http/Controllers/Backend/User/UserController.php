@@ -33,7 +33,25 @@ class UserController extends Controller
 
     public function index(Request $request) {
         $template = 'backend.user.user.index';
-        $userCatalogues = $this->userCatalogueRepository->all();
+        $currentLanguage = session('currentLanguage');
+        $userCatalogues = $this->userCatalogueRepository->findByCondition(
+            [
+                ['ucl.language_id', '=', $currentLanguage->id],
+            ],
+            true,
+            [
+                [
+                    'table' => 'user_catalogue_languages as ucl', 
+                    'on' => [['ucl.user_catalogue_id', 'user_catalogues.id']]
+                ]
+            ],
+            
+            ['user_catalogues.id' => 'DESC'],
+            [
+                'user_catalogues.id', 
+                'ucl.*', 
+            ]
+        );
         $configs = $this->configs();
         $configs['seo'] = __('messages.user');
         $provinces = $this->provinceRepository->all();

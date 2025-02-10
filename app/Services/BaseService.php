@@ -17,8 +17,8 @@ class BaseService implements BaseServiceInterface {
             $payload = [
                 $model['field'] => $model['status']
             ];
-            $userCatalogue = $this->{lcfirst($model['model']) . 'Repository'}->update($id, $payload);
-            if ($userCatalogue) {
+            $model = $this->{lcfirst($model['model']) . 'Repository'}->update($id, $payload);
+            if ($model) {
                 DB::commit();
                 return response()->json([
                     'status' => 'success',
@@ -47,8 +47,8 @@ class BaseService implements BaseServiceInterface {
             ];
 
         
-            $userCatalogues = $this->{lcfirst($model['model']) . 'Repository'}->updateByWhere($condition, $payload);
-            if ($userCatalogues) {
+            $models = $this->{lcfirst($model['model']) . 'Repository'}->updateByWhere($condition, $payload);
+            if ($models) {
                 DB::commit();
                 return response()->json([
                     'status' => 'success',

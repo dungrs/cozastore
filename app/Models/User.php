@@ -36,6 +36,8 @@ class User extends Authenticatable
         'publish'
     ];
 
+    protected $table = 'users';
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -57,5 +59,10 @@ class User extends Authenticatable
 
     public function user_catalogues() {
         return $this->belongsTo(UserCatalogue::class, 'user_catalogue_id', 'id');
+    }
+    
+    public function languageable()
+    {
+        return $this->morphTo();
     }
 }

@@ -5,25 +5,23 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <form method="post" id="form-store-modal">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="myLargeModalLabel">{{ $configModal['add_member'] }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                @include('backend.component.modalHeader')
                 <div class="modal-body">
+                    @include('backend.component.requiredFields')
                     <h6 class="mb-3">{{ $configModal['common_info'] }}</h6>
                     <div class="row">
-                        <input type="hidden" id="form-mode" name="form_mode" value="">
+                    <input type="hidden" id="form-mode" name="form_mode" value="">
                         <div class="col-md-6 mb-3">
-                            <label for="name">{{ $configModal['name'] }} <span class="text-danger">(*)</span></label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="{{ $configModal['name_placeholder'] }}">
+                            <label for="name">{{ $configModal['name'] }} <i class="uil uil-exclamation-circle text-danger"></i></label>
+                            <input type="text" class="form-control name" name="name" placeholder="{{ $configModal['name_placeholder'] }}">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="email">{{ $configModal['email'] }} <span class="text-danger">(*)</span></label>
-                            <input type="text" class="form-control" id="email" name="email" placeholder="{{ $configModal['email_placeholder'] }}">
+                            <label for="email">{{ $configModal['email'] }} <i class="uil uil-exclamation-circle text-danger"></i></label>
+                            <input type="text" class="form-control email" name="email" placeholder="{{ $configModal['email_placeholder'] }}">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div id="user_catalogue_id">
-                                <label for="user_catalogue_id">{{ $configModal['group'] }} <span class="text-danger">(*)</span></label>
+                            <div class="user_catalogue_id">
+                                <label for="user_catalogue_id">{{ $configModal['group'] }} <i class="uil uil-exclamation-circle text-danger"></i></label>
                                 <div class="">
                                     <select class="form-control rounded choice-single" name="user_catalogue_id">
                                         <option value="">{{ $configModal['group_placeholder'] }}</option>
@@ -35,12 +33,12 @@
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="birthday">{{ $configModal['birthday'] }} <span class="text-danger">(*)</span></label>
-                            <input type="text" class="form-control datepicker-basic" id="birthday" name="birthday" placeholder="{{ $configModal['birthday_placeholder'] }}">
+                            <label for="birthday">{{ $configModal['birthday'] }} <i class="uil uil-exclamation-circle text-danger"></i></label>
+                            <input type="text" class="form-control datepicker-basic birthday" name="birthday" placeholder="{{ $configModal['birthday_placeholder'] }}">
                         </div>
                         <div class="col-md-12 mb-3">
                             <label for="image">{{ $configModal['avatar'] }}</label>
-                            <input type="text" class="form-control upload-image" data-type="Images" name="image" id="image" placeholder="{{ $configModal['avatar_placeholder'] }}">
+                            <input type="text" class="form-control upload-image image" data-type="Images" id="image" placeholder="{{ $configModal['avatar_placeholder'] }}">
                         </div>
                     </div>
 
@@ -83,10 +81,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.modal.close') }}</button>
-                    <button type="submit" class="btn btn-primary" id="submitButton">{{ __('messages.modal.confirm') }}</button>
-                </div>
+                @include('backend.component.modalFooter')
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

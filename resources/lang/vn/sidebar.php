@@ -8,7 +8,7 @@ return [
         [
             'title' => 'Bảng điều khiển',
             'icon' => 'bx bx-home-circle',
-            'name' => 'dashboard',
+            'name' => ['dashboard'],
         ],
         [
             'menu_title' => 'Ứng dụng'
@@ -16,7 +16,7 @@ return [
         [
             'title' => 'QL Nhóm Thành Viên',
             'icon' => 'bx bxs-user',
-            'name' => 'user',
+            'name' => ['user'],
             'subModule' => [
                 [
                     'title' => 'QL Nhóm Thành Viên',
@@ -26,6 +26,18 @@ return [
                     'title' => 'QL Thành Viên',
                     'route' => 'user.index'
                 ]
+            ]
+        ],
+        [
+            'title' => 'Cấu hình chung',
+            'icon' => 'bx bxs-cog',
+            'name' => ['language'],
+            'subModule' => [
+                [
+                    'title' => 'QL Ngôn Ngữ',
+                    'route' => 'language.index'
+                ],
+                
             ]
         ],
         // [

@@ -24,3 +24,4 @@
     @include('backend.component.footer')
 </div>
 @include('backend.user.catalogue.component.storeModal')
+@include('backend.user.catalogue.component.translateModal')

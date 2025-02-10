@@ -32,6 +32,8 @@ return [
         'email' => [
             'required' => 'Email cannot be empty.',
             'email' => 'Entered email is in an incorrect format.',
+            'unique' => 'This email is already in use. Please choose another email.',
+            'max' => 'Email cannot exceed 250 characters.',
         ],
         'phone' => [
             'required' => 'Phone number cannot be empty.',
@@ -42,5 +44,14 @@ return [
             'string' => 'Description must be a string.',
             'max' => 'Description cannot exceed 500 characters.',
         ],
-    ]
+    ],
+    'language' => [
+        'name' => [
+            'required' => 'You have not entered the language name.',
+        ],
+        'canonical' => [
+            'required' => 'You have not entered the language keyword.',
+            'unique' => 'The keyword already exists, please choose another one.',
+        ],
+    ],
 ];

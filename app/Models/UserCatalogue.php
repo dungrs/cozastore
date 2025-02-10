@@ -12,10 +12,10 @@ class UserCatalogue extends Model
 {
     use HasFactory, QueryScopes, SoftDeletes, Notifiable;
 
+    protected $table = 'user_catalogues';
+
     protected $fillable = [
         'id',
-        'name',
-        'description',
         'phone',
         'email',
         'publish'
@@ -23,5 +23,9 @@ class UserCatalogue extends Model
 
     public function users() {
         return $this->hasMany(User::class, 'user_catalogue_id', 'id');
+    }
+
+    public function languages() {
+        return $this->belongsToMany(Language::class, 'user_catalogue_languages', 'user_catalogue_id', 'language_id')->withPivot('name', 'description');
     }
 }

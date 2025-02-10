@@ -59,35 +59,21 @@
             </div>
 
             <div class="dropdown d-inline-block language-switch">
-                <button type="button" class="btn header-item noti-icon"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img id="header-lang-img" src="{{ asset('backend/images/flags/us.jpg') }}" alt="Header Language" height="16">
-                </button>
+                @if ($currentLanguage)
+                    <button type="button" class="btn header-item noti-icon"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img id="header-lang-img" src="{{ asset($currentLanguage->image ?? '') }}" alt="Header Language" height="16" width="25px">
+                    </button>
+                @endif
                 <div class="dropdown-menu dropdown-menu-end">
-                
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="eng">
-                        <img src="{{ asset('backend/images/flags/us.jpg') }}" alt="user-image" class="me-2" height="12"> <span class="align-middle">English</span>
-                    </a>
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="sp">
-                        <img src="{{ asset('backend/images/flags/spain.jpg') }}" alt="user-image" class="me-2" height="12"> <span class="align-middle">Spanish</span>
-                    </a>
-            
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="gr">
-                        <img src="{{ asset('backend/images/flags/germany.jpg') }}" alt="user-image" class="me-2" height="12"> <span class="align-middle">German</span>
-                    </a>
-            
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="it">
-                        <img src="{{ asset('backend/images/flags/italy.jpg') }}" alt="user-image" class="me-2" height="12"> <span class="align-middle">Italian</span>
-                    </a>
-            
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="ru">
-                        <img src="{{ asset('backend/images/flags/russia.jpg') }}" alt="user-image" class="me-2" height="12"> <span class="align-middle">Russian</span>
-                    </a>
+                    @if ($availableLanguages)
+                        @foreach ($availableLanguages as $language)
+                            <!-- item-->
+                            <a href="{{ route('language.backend.switch', $language->id) }}" class="dropdown-item notify-item language" data-lang="{{ $language->canonical }}">
+                                <img src="{{ asset($language->image ?? '') }}" alt="user-image" class="me-2" height="12" width="20"> <span class="align-middle">{{ $language->name }}</span>
+                            </a>
+                        @endforeach
+                    @endif
                 </div>
             </div>
 
@@ -219,13 +205,21 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0">{{ $configs['seo']['index']['title'] }}</h4>
+                        <h4 class="mb-0">{{ $configs['seo']['index']['title'] ?? '' }}</h4>
                         @foreach (__('sidebar.module') as $item)
-                            @if (isset($item['name']) && $item['name'] == $segment)
+                            @if (isset($item['name']) && in_array($segment, $item['name']))
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{ $item['title'] }}</a></li>
-                                        <li class="breadcrumb-item active">{{ $configs['seo']['index']['title'] }}</li>
+                                        <li class="breadcrumb-item {{ isset($configs['seo']['index']['title']) ? '' : 'active' }}" >
+                                            @if (isset($configs['seo']['index']['title']))
+                                                <a href="javascript: void(0);">{{ $item['title'] ?? '' }}</a>
+                                            @else
+                                                {{ $item['title'] ?? '' }}
+                                            @endif
+                                        </li>
+                                        @if (isset($configs['seo']['index']['title']))
+                                            <li class="breadcrumb-item active">{{ $configs['seo']['index']['title'] ?? '' }}</li>
+                                        @endif
                                     </ol>
                                 </div>
                                 @break

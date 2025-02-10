@@ -14,14 +14,15 @@ class AppRepositoryProvider extends ServiceProvider
      */
     public function register()
     {   
-        // $bindings = [
-        //     'UserRepositoryInteface' => 'UserRepository',
-        //     'UserCatalogueRepositoryInteface' => 'UserCatalogueRepository'
-        // ];
+        $bindings = [
+            'User\\UserRepositoryInteface' => 'User\\UserRepository',
+            'User\\UserCatalogueRepositoryInteface' => 'User\\UserCatalogueRepository',
+            'LanguageRepositoryInteface' => 'LanguageRepository',
+        ];
 
-        // foreach($bindings as $interface => $implementation) {
-        //     $this->app->bind("App\\Repositories\\Interfaces\\$interface", "App\\Repositories\\$implementation");
-        // }
+        foreach($bindings as $interface => $implementation) {
+            $this->app->bind("App\\Repositories\\Interfaces\\$interface", "App\\Repositories\\$implementation");
+        }
     }
 
     /**

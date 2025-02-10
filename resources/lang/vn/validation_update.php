@@ -31,6 +31,8 @@ return [
         'email' => [
             'required' => 'Email không được để trống.',
             'email' => 'Email nhập không đúng định dạng.',
+            'unique' => 'Email này đã được sử dụng. Vui lòng chọn email khác.',
+            'max' => 'Email không được vượt quá 250 ký tự.',
         ],
         'phone' => [
             'required' => 'Số điện thoại không được để trống.',
@@ -40,6 +42,16 @@ return [
         'description' => [
             'string' => 'Mô tả phải là chuỗi.',
             'max' => 'Mô tả không được vượt quá 500 ký tự.',
+        ],
+    ],
+
+    'language' => [
+        'name' => [
+            'required' => 'Bạn chưa nhập tên ngôn ngữ.',
+        ],
+        'canonical' => [
+            'required' => 'Bạn chưa nhập vào từ khóa ngôn ngữ.',
+            'unique' => 'Từ khóa đã tồn tại, hãy chọn từ khóa khác.',
         ],
     ],
 ];

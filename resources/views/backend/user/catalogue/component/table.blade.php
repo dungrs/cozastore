@@ -13,8 +13,8 @@
                 <th style="vertical-align: middle">{{ $seoTableHeaders['phone'] }}</th>
                 <th style="vertical-align: middle">{{ $seoTableHeaders['email'] }}</th>
                 <th style="vertical-align: middle">{{ $seoTableHeaders['user_count'] }}</th>
-                <th style="vertical-align: middle">{{ $seoTableHeaders['status'] }}</th>
-                <th style="vertical-align: middle">{{ $seoTableHeaders['actions'] }}</th>
+                <th style="vertical-align: middle">{{ __('messages.status') }}</th>
+                <th style="vertical-align: middle">{{ __('messages.actions.title') }}</th>
             </tr>
         </thead>
         <tbody class="data-table">

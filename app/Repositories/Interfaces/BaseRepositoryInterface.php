@@ -4,7 +4,6 @@ namespace App\Repositories\Interfaces;
 
 interface BaseRepositoryInterface {
     public function all(array $relation = [], string $selectRaw = '');
-    public function create($payload = []);
     public function paginate(
         array $column = ['*'],
         array $condition = [],
@@ -15,6 +14,19 @@ interface BaseRepositoryInterface {
         array $join = [],
         array $relations = [],
         array $rawQuery = [],
+    );
+    public function create($payload = []);
+    public function createPivot($model, array $payload, string $relation = '');
+    public function findByCondition(
+        $condition, 
+        $flag = false, 
+        array $joins = [], 
+        array $orderBy = [], 
+        array $select = ['*'], 
+        $paginate = null,
+        array $relations = [],
+        array $groupBy = [],
+        int $limit = null
     );
     public function findById(int $modelId, array $column = ['*'], array $relation = []);
     public function updateByWhere(array $condition = [], array $payload = []);

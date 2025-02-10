@@ -42,7 +42,7 @@
                         <li class="menu-title">{{ $item['menu_title'] }}</li> @continue
                     @endisset
 
-                    <li class="{{ $item['name'] == $segment ? 'mm-active' : '' }}">
+                    <li class="{{ (in_array($segment, $item['name'])) ? 'mm-active' : '' }}">
                         <a href="{{ route('dashboard.index') }}" class="{{ isset($item['subModule']) ? 'has-arrow' : '' }}">
                             <i class="{{ $item['icon'] }} nav-icon"></i>
                             <span class="menu-item" data-key="t-ecommerce">{{ $item['title'] }}</span>

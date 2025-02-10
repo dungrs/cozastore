@@ -15,14 +15,14 @@ class DashboardController extends Controller {
 
     public function changeStatus(Request $request, $id) {
         $post = $request->input();
-        $serviceClass = resolveInstance($post['model'], $post['modelParent']);
+        $serviceClass = resolveInstance($post['model'], $post['modelParent'] ?? '');
         $response = $serviceClass->updateStatus($post, $id);
         return $response;
     }
 
     public function changeStatusAll(Request $request) {
         $post = $request->input();
-        $serviceClass = resolveInstance($post['model'], $post['modelParent']);
+        $serviceClass = resolveInstance($post['model'], $post['modelParent'] ?? '');
         $response = $serviceClass->updateStatusAll($post);
         return $response;
     }

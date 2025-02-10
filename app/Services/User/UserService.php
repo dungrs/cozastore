@@ -20,6 +20,7 @@ class UserService extends BaseService implements UserServiceInterface {
     public function paginate($request) {
         $perpage = $request->input('perpage', 2);
         $page = $request->integer('page');
+        $languageId = session('currentLanguage')->id;
 
         $condition = [
             'keyword' => addslashes($request->input('keyword')),
@@ -37,7 +38,18 @@ class UserService extends BaseService implements UserServiceInterface {
         }
 
         $join = [
-            ['user_catalogues as uc', 'uc.id', '=', 'users.user_catalogue_id']
+            [   
+                'table' => 'user_catalogues as uc', 
+                'on' => [['uc.id', 'users.user_catalogue_id']]
+            ],
+            [   
+                'table' => 'user_catalogue_languages as ucl', 
+                'on' => [
+                    ['ucl.user_catalogue_id', 'uc.id'],
+                    ['ucl.language_id', $languageId]
+                ],
+                'type' => 'left',
+            ]
         ];
     
         $extend['path'] = '/user/index';
@@ -162,7 +174,7 @@ class UserService extends BaseService implements UserServiceInterface {
             'users.ward_id',
             'users.image',
             'users.user_catalogue_id',
-            'uc.name as user_catalogue_name'
+            'ucl.name as user_catalogue_name'
         ];
     }
 }

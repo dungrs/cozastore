@@ -67,10 +67,22 @@ trait QueryScopes {
         return $query;
     }
 
-    public function scopeCustomJoin($query, $join) {
-        if (isset($join) && is_array($join) && count($join)) {
-            foreach($join as $key => $val) {
-                $query->join($val[0], $val[1], $val[2], $val[3]);
+    public function scopeCustomJoin($query, $joins) {
+        if (isset($joins) && is_array($joins) && count($joins)) {
+            foreach ($joins as $join) {
+                $type = isset($join['type']) ? strtolower($join['type']) : 'inner';
+                $table = $join['table'];
+                $onConditions = $join['on'];
+    
+                $query->join($table, function ($joinQuery) use ($onConditions, $type) {
+                    foreach ($onConditions as $index => $condition) {
+                        if ($index === 0) {
+                            $joinQuery->on($condition[0], '=', $condition[1]);
+                        } else {
+                            $joinQuery->where($condition[0], '=', $condition[1]);
+                        }
+                    }
+                }, null, null, $type);
             }
         }
         return $query;

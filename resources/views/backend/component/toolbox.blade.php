@@ -1,7 +1,7 @@
-<div class="d-flex justify-content-end pt-2">
+<div class="d-flex justify-content-end pt-1">
     <div class="dropdown">
         <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bx bxs-wrench font-size-20"></i>
+            <i class="mdi mdi-dots-vertical font-size-20"></i>
         </a>
 
         <ul class="dropdown-menu dropdown-menu-end">

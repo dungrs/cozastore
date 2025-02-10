@@ -6,6 +6,7 @@ if (!function_exists('resolveInstance')) {
         if ($modelFolder != '') {
             $interfaceNamespace = "\\App\\$folder\\$modelFolder\\$model$interface";
         }
+
         
         if (!class_exists($interfaceNamespace)) {
             return response()->json([
@@ -41,5 +42,11 @@ if (!function_exists('convertDateToDatabaseFormat')) {
         } else {
             return null;
         }
+    }
+}
+
+if (!function_exists('toSnakeCase')) {
+    function toSnakeCase($input) {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
     }
 }

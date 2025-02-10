@@ -8,15 +8,15 @@ return [
         [
             'title' => '대시보드',
             'icon' => 'bx bx-home-circle',
-            'name' => 'dashboard',
+            'name' => ['dashboard'],
         ],
         [
-            'menu_title' => '응용 프로그램'
+            'menu_title' => '애플리케이션'
         ],
         [
             'title' => '회원 그룹 관리',
             'icon' => 'bx bxs-user',
-            'name' => 'user',
+            'name' => ['user'],
             'subModule' => [
                 [
                     'title' => '회원 그룹 관리',
@@ -26,6 +26,18 @@ return [
                     'title' => '회원 관리',
                     'route' => 'user.index'
                 ]
+            ]
+        ],
+        [
+            'title' => '일반 설정',
+            'icon' => 'bx bxs-cog',
+            'name' => ['language'],
+            'subModule' => [
+                [
+                    'title' => '언어 관리',
+                    'route' => 'language.index'
+                ],
+                
             ]
         ],
         // [

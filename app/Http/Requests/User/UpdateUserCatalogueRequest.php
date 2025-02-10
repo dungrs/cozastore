@@ -25,7 +25,7 @@ class UpdateUserCatalogueRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email',
+            'email' => 'required|string|email|unique:user_catalogues,email,'.$this->id.'|max:250',
             'phone' => 'required|string|max:20',
             'description' => 'nullable|string|max:500' 
         ];
@@ -42,6 +42,8 @@ class UpdateUserCatalogueRequest extends FormRequest
 
             'email.required' => $validateMessages['email']['required'],
             'email.email' => $validateMessages['email']['email'],
+            'email.unique' => $validateMessages['email']['unique'],
+            'email.max' => $validateMessages['email']['max'],
 
             'phone.required' => $validateMessages['phone']['required'],
             'phone.string' => $validateMessages['phone']['string'],
